@@ -1,8 +1,10 @@
 import Phaser from 'phaser'
 
 const CHARS = [
-  { key: 'mario', label: '마리오', color: '#cc0000' },
-  { key: 'luigi', label: '루이지', color: '#007700' }
+  { key: 'mario',       label: '마리오', color: '#cc0000' },
+  { key: 'luigi',       label: '루이지', color: '#007700' },
+  { key: 'anjeongyeon', label: '안정연',  color: '#7B4A2A' },
+  { key: 'sinchaeha',   label: '신채하',  color: '#7B1010' }
 ]
 
 export default class CharacterSelectScene extends Phaser.Scene {
@@ -25,20 +27,20 @@ export default class CharacterSelectScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5)
 
-    // Character cards
-    const positions = [width / 2 - 160, width / 2 + 160]
+    // Character cards — 4 characters evenly spaced
+    const positions = [110, 280, 450, 630]
     CHARS.forEach((char, i) => {
       const x = positions[i]
       const y = 240
 
-      const border = this.add.rectangle(x, y, 140, 200, 0x000000, 0.4)
+      const border = this.add.rectangle(x, y, 120, 180, 0x000000, 0.4)
         .setStrokeStyle(4, i === 0 ? 0xffdd00 : 0x444444)
 
       const sprite = this.add.image(x, y - 20, `${char.key}_idle`)
-        .setScale(3)
+        .setScale(2.5)
 
-      const label = this.add.text(x, y + 70, char.label, {
-        fontSize: '22px',
+      const label = this.add.text(x, y + 68, char.label, {
+        fontSize: '18px',
         fontFamily: 'Arial Black, Arial',
         color: char.color,
         stroke: '#000000',
@@ -82,8 +84,8 @@ export default class CharacterSelectScene extends Phaser.Scene {
 
     // Keyboard navigation
     this.cursors = this.input.keyboard.createCursorKeys()
-    this.input.keyboard.on('keydown-LEFT',  () => this.selectChar(0))
-    this.input.keyboard.on('keydown-RIGHT', () => this.selectChar(1))
+    this.input.keyboard.on('keydown-LEFT',  () => this.selectChar((this.selectedIndex - 1 + CHARS.length) % CHARS.length))
+    this.input.keyboard.on('keydown-RIGHT', () => this.selectChar((this.selectedIndex + 1) % CHARS.length))
     this.input.keyboard.on('keydown-ENTER', () => this.startGame())
 
     // Back button
