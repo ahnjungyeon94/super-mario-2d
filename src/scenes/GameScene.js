@@ -3,6 +3,7 @@ import Player from '../entities/Player.js'
 import Goomba from '../entities/Goomba.js'
 import Coin from '../entities/Coin.js'
 import QuestionBlock from '../objects/QuestionBlock.js'
+import MobileControls from '../ui/MobileControls.js'
 import {
   TILE, WORLD_WIDTH, WORLD_HEIGHT, GROUND_TOP,
   GROUND_SEGS, PLATFORMS, QUESTION_BLOCKS, COINS, GOOMBAS, FLAGPOLE
@@ -34,12 +35,20 @@ export default class GameScene extends Phaser.Scene {
 
     this.cursors  = this.input.keyboard.createCursorKeys()
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+
+    // 터치 기기에서만 모바일 컨트롤 생성
+    if (this.sys.game.device.input.touch) {
+      this.mobileControls = new MobileControls(this)
+    }
   }
 
   update() {
     if (!this.player || this.player.isDead) return
 
-    this.player.update(this.cursors, this.spaceKey)
+    const touch = this.mobileControls ?? null
+    if (touch) touch.update()
+
+    this.player.update(this.cursors, this.spaceKey, touch)
 
     this._goombaEntities.forEach(g => g.update())
 

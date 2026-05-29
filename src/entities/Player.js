@@ -18,17 +18,20 @@ export default class Player {
     this.sprite.setData('entity', this)
   }
 
-  update(cursors, spaceKey) {
+  update(cursors, spaceKey, touch = null) {
     if (this.isDead) return
 
     this.prevVelY = this.sprite.body.velocity.y
     const onGround = this.sprite.body.blocked.down
     const speed = 220
 
-    if (cursors.left.isDown) {
+    const leftDown  = cursors.left.isDown  || (touch?.left  ?? false)
+    const rightDown = cursors.right.isDown || (touch?.right ?? false)
+
+    if (leftDown) {
       this.sprite.setVelocityX(-speed)
       this.sprite.setFlipX(true)
-    } else if (cursors.right.isDown) {
+    } else if (rightDown) {
       this.sprite.setVelocityX(speed)
       this.sprite.setFlipX(false)
     } else {
@@ -37,7 +40,8 @@ export default class Player {
 
     const jumpPressed =
       Phaser.Input.Keyboard.JustDown(spaceKey) ||
-      Phaser.Input.Keyboard.JustDown(cursors.up)
+      Phaser.Input.Keyboard.JustDown(cursors.up) ||
+      (touch?.jumpJustDown ?? false)
 
     if (jumpPressed && onGround) {
       this.sprite.setVelocityY(-580)

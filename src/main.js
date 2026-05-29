@@ -11,7 +11,16 @@ const config = {
   width: 800,
   height: 600,
   backgroundColor: '#5c94fc',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 800,
+    height: 600
+  },
   dom: { createContainer: true },
+  input: {
+    activePointers: 3  // 멀티터치: 왼쪽+오른쪽+점프 동시 지원
+  },
   physics: {
     default: 'arcade',
     arcade: {
